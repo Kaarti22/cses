@@ -51,24 +51,20 @@ int mmul(int a,int b){
 class Kaarti{
 public:
     void method(vector<pair<int, int>>& v, int n){
-        sort(all(v), [&](pair<int, int>& a, pair<int, int>& b){
+        vector<pair<int, int>>events;
+        for(auto it: v){
+            events.pb({it.first, 1});
+            events.pb({it.second, -1});
+        }
+        sort(all(events), [&](pair<int, int>& a, pair<int, int>& b){
             if(a.first == b.first) return a.second < b.second;
             return a.first < b.first;
         });
-        pair<int, int>a = v[0];
-        int ans = 1, curr = 1;
-        rep(i,1,n){
-            if(v[i].first <= a.second){
-                curr++;
-                a.first = max(a.first, v[i].first);
-                a.second = min(a.second, v[i].second);
-                if(a.first > a.second) curr--;
-            } else {
-                curr = 1;
-                a = v[i];
-            }
+        int curr = 0, ans = 0;
+        for(auto it: events){
+            curr += it.second;
             ans = max(ans, curr);
-        }
+        } 
         cout<<ans<<endl;
     }
 };
