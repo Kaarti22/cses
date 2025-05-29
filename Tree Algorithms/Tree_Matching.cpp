@@ -49,32 +49,31 @@ int mmul(int a,int b){
 }
 
 class Kaarti{
+private:
+    void dfs(int u, int parent, vvi& adj, vvi& dp){
+        dp[u][0] = 0;
+        dp[u][1] = 0;
+        for(auto v: adj[u]){
+            if(v == parent) continue;
+            dfs(v, u, adj, dp);
+            dp[u][0] += max(dp[v][0], dp[v][1]);
+        }
+        for(auto v: adj[u]){
+            if(v == parent) continue;
+            dp[u][1] = max(dp[u][1], dp[u][0] - max(dp[v][0], dp[v][1]) + dp[v][0] + 1);
+        }
+    }
+
 public:
     void method(vvi& v, int n){
-        vector<unordered_set<int>> adj(n+1, unordered_set<int>());
+        vvi adj(n+1, vi());
         for(auto it: v){
-            adj[it[0]].insert(it[1]);
-            adj[it[1]].insert(it[0]);
+            adj[it[0]].pb(it[1]);
+            adj[it[1]].pb(it[0]);
         }
-        queue<int> q;
-        rep(i,1,n+1){
-            if(adj[i].size() <= 1){
-                q.push(i);
-            }
-        }
-        int ans = 0;
-        while(!q.empty()){
-            int node = q.front();
-            q.pop();
-            if(adj[node].size() == 0) continue;
-            ans++;
-            int v = *adj[node].begin();
-            for(auto& it: adj[v]){
-                adj[it].erase(v);
-                if(adj[it].size() <= 1) q.push(it);
-            }
-        }
-        cout<<ans<<endl;
+        vvi dp(n+1, vi(2));
+        dfs(1, 0, adj, dp);
+        cout<<max(dp[1][0], dp[1][1])<<endl;
     }
 };
 
