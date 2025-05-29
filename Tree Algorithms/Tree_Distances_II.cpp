@@ -61,14 +61,8 @@ private:
     }
 
     void outDfs(vvi& adj, int node, int par, vi& size, vi& in, vi& out){
-        int sum = 0;
         for(auto it: adj[node]){
             if(it == par) continue;
-            sum += in[it] + size[it];
-        }
-        for(auto it: adj[node]){
-            if(it == par) continue;
-            sum -= in[it];
             out[it] = out[node] + (size[1] - size[it]) + (in[node] - (in[it] + size[it]));
             outDfs(adj, it, node, size, in, out);
         }
